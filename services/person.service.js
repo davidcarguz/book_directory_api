@@ -1,4 +1,4 @@
-const { addPerson, retrievePerson, updatePerson, deletePerson } = require('../db/database');
+const { addPerson, retrievePerson, updatePerson, deletePerson } = require('../libs/database');
 
 
 class PersonService{
