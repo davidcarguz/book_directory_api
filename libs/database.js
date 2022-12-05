@@ -1,13 +1,13 @@
-const dbConnect = require('./connection');
 const pgConnect = require('./connectionPg');
 
 
 //const db = dbConnect();
 
 async function addPerson (person){
-    const dbRes = await db.one(`INSERT INTO people(person_name, person_lastname, email, phone, country, city, address) 
+    const pgConn = await pgConnect();
+    const dbRes = await pgConn.query(`INSERT INTO people(person_name, person_lastname, email, phone, country, city, address) 
     VALUES('${person.name}','${person.lastname}','${person.email}','${person.phone}','${person.country}','${person.city}','${person.address}') RETURNING person_id`);
-    return dbRes;
+    return dbRes.rows[0];
 }
 
 async function retrievePerson(id){
@@ -47,7 +47,8 @@ async function updatePerson(data){
     }
     dataFormatted = dataFormatted.slice(0,-1);
     try{
-        const dbRes = await db.none(`UPDATE people SET ${dataFormatted} where person_id=${person.person_id}`);
+        const pgConn = await pgConnect();
+        const dbRes = await pgConn.query(`UPDATE people SET ${dataFormatted} where person_id=${person.person_id}`);
         return true;
     }catch(e){
         return false;
@@ -57,7 +58,8 @@ async function updatePerson(data){
 
 async function deletePerson(id){
     try{
-        const dbRes = await db.none(`DELETE from people where person_id=${id}`);
+        const pgConn = await pgConnect();
+        const dbRes = await pgConn.query(`DELETE from people where person_id=${id}`);
         return true;
     }catch(e){
         return false
