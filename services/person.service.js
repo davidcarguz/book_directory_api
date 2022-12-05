@@ -1,11 +1,12 @@
-const { addPerson, retrievePerson, updatePerson, deletePerson } = require('../libs/database');
+const Database = require('../libs/database');
 
+const database = new Database();
 
 class PersonService{
 
     async create(person){
         let response = {};
-        const dbRes = await addPerson(person);
+        const dbRes = await database.addPerson(person);
         response.status_code = 201;
         response.message = "Successfully Saved.";
         response.person_id = dbRes.person_id;
@@ -14,7 +15,7 @@ class PersonService{
 
     async findPerson(id){
     let response = {};
-    const dbRes = await retrievePerson(id);
+    const dbRes = await database.retrievePerson(id);
     if(!dbRes){
         response.status_code = 404;
         response.message = "The person does not exist or book directory is empty.";
@@ -27,7 +28,7 @@ class PersonService{
 
     async findPeople(){
         let response = {};
-        const dbRes = await retrievePerson('undefined');
+        const dbRes = await database.retrievePerson('undefined');
         if(!dbRes){
             response.status_code = 404;
             response.message = "The book directory is empty.";
@@ -41,7 +42,7 @@ class PersonService{
     async partialUpdate(id, data){
         data.id = parseInt(id);
         let response = {};
-            const dbRes = await updatePerson(data);
+            const dbRes = await database.updatePerson(data);
             if(dbRes){
                 response.status_code = 200;
                 response.message = `Record with id ${data.id} was successfully updated`;
@@ -54,7 +55,7 @@ class PersonService{
 
     async delete(data){
         let response = {};
-        const dbRes = await deletePerson(data.id);
+        const dbRes = await database.deletePerson(data.id);
         if(dbRes){
             response.status_code = 200;
             response.message = `Record with id ${data.id} was successfully deleted`;
