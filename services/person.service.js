@@ -40,12 +40,11 @@ class PersonService{
     }
 
     async partialUpdate(id, data){
-        data.id = parseInt(id);
         let response = {};
-            const dbRes = await database.updatePerson(data);
+            const dbRes = await database.updatePerson(id, data);
             if(dbRes){
                 response.status_code = 200;
-                response.message = `Record with id ${data.id} was successfully updated`;
+                response.message = `Record with id ${id} was successfully updated`;
             }else{ 
                 response.status_code = 400;
                 response.message = `There was an error updating the record`;

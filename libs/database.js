@@ -6,8 +6,6 @@ class Database {
 
     async addPerson (person){
         const dbRes = await models.Person.create(person);
-        //const dbRes = await sequelize.query(`INSERT INTO people(person_name, person_lastname, email, phone, country, city, address) 
-        //VALUES('${person.name}','${person.lastname}','${person.email}','${person.phone}','${person.country}','${person.city}','${person.address}') RETURNING person_id`);
         return dbRes;
     }
 
@@ -25,27 +23,10 @@ class Database {
         }
     }
 
-    async updatePerson(data){
-        let dataFormatted = "";
-        const person = {
-            person_id:data.id,
-            person_name:data.name,
-            person_lastname:data.lastname,
-            email:data.email,
-            phone:data.phone,
-            country:data.country,
-            city:data.city,
-            address:data.address
-        }
-
-        for(const key in person){
-            if(key !== 'person_id' && typeof person[key] !== 'undefined'){
-                dataFormatted += `${key}='${person[key]}',`
-            }
-        }
-        dataFormatted = dataFormatted.slice(0,-1);
+    async updatePerson(id, data){
         try{
-            const dbRes = await sequelize.query(`UPDATE people SET ${dataFormatted} where person_id=${person.person_id}`);
+            const person = await models.Person.findByPk(id);
+            await person.update(data);
             return true;
         }catch(e){
             return false;
@@ -55,7 +36,8 @@ class Database {
 
     async deletePerson(id){
         try{
-            const dbRes = await sequelize.query(`DELETE from people where person_id=${id}`);
+            const person = await models.Person.findByPk(id);
+            await person.destroy();
             return true;
         }catch(e){
             return false
