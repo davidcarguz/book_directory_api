@@ -1,22 +1,25 @@
 const sequelize = require('./sequelize');
 
+const { models } = require('./sequelize');
+
 class Database {
 
     async addPerson (person){
-        const dbRes = await sequelize.query(`INSERT INTO people(person_name, person_lastname, email, phone, country, city, address) 
-        VALUES('${person.name}','${person.lastname}','${person.email}','${person.phone}','${person.country}','${person.city}','${person.address}') RETURNING person_id`);
-        return dbRes[0];
+        const dbRes = await models.Person.create(person);
+        //const dbRes = await sequelize.query(`INSERT INTO people(person_name, person_lastname, email, phone, country, city, address) 
+        //VALUES('${person.name}','${person.lastname}','${person.email}','${person.phone}','${person.country}','${person.city}','${person.address}') RETURNING person_id`);
+        return dbRes;
     }
 
     async retrievePerson(id){
         let dbRes;
         try{
             if(id === "undefined"){
-                dbRes = await sequelize.query(`SELECT * from people order by person_id asc`);
+                dbRes = await models.Person.findAll({order: [['id', 'ASC']]});
             }else{
-                dbRes = await sequelize.query(`SELECT * from people where person_id=${id}`);
+                dbRes = await models.Person.findByPk(id);
             }
-            return dbRes[0];
+            return dbRes;
         }catch(e){
             return false;
         }

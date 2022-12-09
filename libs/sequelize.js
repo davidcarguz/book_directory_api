@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
+const setupModels = require('./db/models/index')
 
 const host = process.env.DB_HOST;
 const port= 5432;
@@ -13,5 +14,9 @@ const sequelize = new Sequelize(URI, {
     dialect: 'postgres',
     logging: true
 });
+
+setupModels(sequelize);
+
+sequelize.sync()
 
 module.exports = sequelize;
