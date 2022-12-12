@@ -1,5 +1,3 @@
-const sequelize = require('./sequelize');
-
 const { models } = require('./sequelize');
 
 class Database {
