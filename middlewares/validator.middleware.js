@@ -3,7 +3,10 @@ function validatorHandler(schema, property){
         const data = req[property];
         const { error } = schema.validate(data);
         if(error){
-            res.status(400).setHeader("Content-Type","application/json").json(error.message.replaceAll('"',''));
+            let response = {};
+            response.statud_code = 400;
+            response.error = error.message.replaceAll('"','');
+            res.status(400).setHeader("Content-Type","application/json").json(response);
         }else{
             next();
         }
